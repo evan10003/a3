@@ -1,5 +1,3 @@
-from sklearn.cluster import KMeans
-from sklearn.mixture import GaussianMixture
 from sklearn.decomposition import PCA, FastICA
 from sklearn.random_projection import GaussianRandomProjection
 from sklearn.feature_selection import RFE
@@ -8,9 +6,6 @@ from data import load_tennis_data, load_titanic_data
 import matplotlib.pyplot as plt
 import numpy.random as random
 import numpy as np
-# from support import k_means_2d, k_means_per_feature
-# from support import em_2d, em_per_feature
-# from support import k_means_one_feature, em_one_feature
 
 # IMPORT DATA
 
