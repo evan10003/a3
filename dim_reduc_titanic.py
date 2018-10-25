@@ -2,6 +2,7 @@ from sklearn.decomposition import PCA, FastICA
 from sklearn.random_projection import GaussianRandomProjection
 from sklearn.feature_selection import RFE
 from sklearn.linear_model import LogisticRegression
+from sklearn.neural_network import MLPClassifier
 from data import load_tennis_data, load_titanic_data
 import matplotlib.pyplot as plt
 import numpy.random as random
@@ -9,11 +10,16 @@ import numpy as np
 
 # IMPORT DATA
 
-#ten_X_train, ten_y_train, ten_X_test, ten_y_test = load_tennis_data()
 tit_X_train, tit_y_train, tit_X_test, tit_y_test = load_titanic_data()
-#ten_df = load_tennis_data(form="original df")
+
+# Split off validation set from training set
+val_cutoff = 3*len(tit_X_train)//4
+tit_X_val = tit_X_train[val_cutoff:]
+tit_y_val = tit_y_train[val_cutoff:]
+tit_X_train = tit_X_train[:val_cutoff]
+tit_y_train = tit_y_train[:val_cutoff]
+
 tit_df = load_titanic_data(form="original df")
-#ten_features, ten_labels = load_tennis_data(form="df")
 tit_features, tit_labels = load_titanic_data(form="df")
 
 tit_cols = tit_features.columns
@@ -31,6 +37,7 @@ plt.title("PCA singular values - Titanic")
 plt.ylabel("singular values")
 plt.xlabel("component")
 plt.savefig("pca_titanic.png")
+plt.clf()
 
 pca_matrix = np.array(pca.components_)
 print(pca_matrix.shape)
@@ -41,14 +48,9 @@ print("\n ICA \n")
 
 ica_models = []
 for n in range(1,9):
-    #print("ICA with " + str(n) + " components")
-    ica = FastICA(n_components=n)
-    ica.fit(tit_X_train)
-    ica.transform(tit_X_train)
+    # max iter set high because of convergence warnings
+    ica = FastICA(n_components=n, max_iter=1000000)
     ica_models.append(ica)
-for i in range(8):
-    ica_matrix = np.array(ica_models[i].mixing_)
-    print(ica_matrix.shape)
 
 # RCA
 
@@ -79,4 +81,22 @@ for i,model in zip(range(len(rfe_models)),rfe_models):
     print(tit_cols[order][:i+1])
 
 
+# ICA --> Neural Net
 
+scores = []
+nn = MLPClassifier(batch_size=16, hidden_layer_sizes=7, alpha=0.001, learning_rate_init=0.01, shuffle=False, random_state=20)
+for ica_model in ica_models:
+    ica_X_train = ica_model.fit_transform(tit_X_train)
+    print(ica_X_train.shape)
+    nn.fit(ica_X_train, tit_y_train)
+
+    ica_X_val = ica_model.fit_transform(tit_X_val)
+    score = nn.score(ica_X_val, tit_y_val)
+    print("val set score", score)
+    scores.append(score)
+
+plt.scatter([1,2,3,4,5,6,7,8], scores)
+plt.title("NN validation set score vs number of ICA components")
+plt.xlabel("number of ICA components (minus 1)")
+plt.ylabel("Neural Net val set accuracy")
+plt.savefig("ica_to_nn_scores_titanic.png")
