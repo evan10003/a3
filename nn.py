@@ -12,14 +12,14 @@ import numpy as np
 
 # IMPORT DATA
 
-tit_X_train, tit_y_train, tit_X_test, tit_y_test = load_titanic_data()
+tit_X_train1, tit_y_train1, tit_X_test, tit_y_test = load_titanic_data()
 
 # Split off validation set from training set
-val_cutoff = 3*len(tit_X_train)//4
-tit_X_val = tit_X_train[val_cutoff:]
-tit_y_val = tit_y_train[val_cutoff:]
-tit_X_train = tit_X_train[:val_cutoff]
-tit_y_train = tit_y_train[:val_cutoff]
+val_cutoff = 3*len(tit_X_train1)//4
+tit_X_val = tit_X_train1[val_cutoff:]
+tit_y_val = tit_y_train1[val_cutoff:]
+tit_X_train = tit_X_train1[:val_cutoff]
+tit_y_train = tit_y_train1[:val_cutoff]
 
 tit_df = load_titanic_data(form="original df")
 tit_features, tit_labels = load_titanic_data(form="df")
@@ -105,3 +105,27 @@ plt.ylabel("Neural Net val set accuracy")
 plt.savefig("kmeans_to_nn_scores_titanic.png")
 plt.clf()
 
+# Using cluster size of 6 to train over entire training set, score on test set
+
+kmm = kmeans_models[4]
+kmm.fit(tit_X_train1)
+l = tit_X_train1.shape[0]
+kmeans_X_train1 = np.zeros((l,5))
+labels = kmm.labels_
+for j in range(len(labels)):
+    label = labels[j]
+    if label != 0:
+        kmeans_X_train1[j,label-1] = 1
+
+nn.fit(kmeans_X_train1, tit_y_train1)
+
+test_labels = kmm.predict(tit_X_test)
+l = tit_X_test.shape[0]
+kmeans_X_test = np.zeros((l,5))
+for j in range(len(test_labels)):
+    label = test_labels[j]
+    if label != 0:
+        kmeans_X_test[j,label-1] = 1
+
+score = nn.score(kmeans_X_test, tit_y_test)
+print("kmean to nn test score", score)
