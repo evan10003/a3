@@ -82,21 +82,36 @@ for i,model in zip(range(len(rfe_models)),rfe_models):
 
 
 # ICA --> Neural Net
+# Now in nn.py
 
-scores = []
-nn = MLPClassifier(batch_size=16, hidden_layer_sizes=7, alpha=0.001, learning_rate_init=0.01, shuffle=False, random_state=20)
-for ica_model in ica_models:
-    ica_X_train = ica_model.fit_transform(tit_X_train)
-    print(ica_X_train.shape)
-    nn.fit(ica_X_train, tit_y_train)
+# scores = []
+# nn = MLPClassifier(batch_size=16, hidden_layer_sizes=7, alpha=0.001, learning_rate_init=0.01, shuffle=False, random_state=20)
+# for ica_model in ica_models:
+#     ica_X_train = ica_model.fit_transform(tit_X_train)
+#     print(ica_X_train.shape)
+#     nn.fit(ica_X_train, tit_y_train)
 
-    ica_X_val = ica_model.fit_transform(tit_X_val)
-    score = nn.score(ica_X_val, tit_y_val)
-    print("val set score", score)
-    scores.append(score)
+#     ica_X_val = ica_model.fit_transform(tit_X_val)
+#     score = nn.score(ica_X_val, tit_y_val)
+#     print("val set score", score)
+#     scores.append(score)
 
-plt.scatter([1,2,3,4,5,6,7,8], scores)
-plt.title("NN validation set score vs number of ICA components")
-plt.xlabel("number of ICA components (minus 1)")
-plt.ylabel("Neural Net val set accuracy")
-plt.savefig("ica_to_nn_scores_titanic.png")
+# plt.scatter([1,2,3,4,5,6,7,8], scores)
+# plt.title("NN validation set score vs number of ICA components")
+# plt.xlabel("number of ICA components")
+# plt.ylabel("Neural Net val set accuracy")
+# plt.savefig("ica_to_nn_scores_titanic.png")
+# plt.clf()
+
+
+
+
+
+
+
+
+
+
+
+
+

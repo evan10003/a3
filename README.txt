@@ -4,6 +4,8 @@ summed over each x and the centroid of that x's assigned cluster as a measure of
 dim_reduc_xxx files implement PCA, ICA, Random Projections, and Recursive Feature Elimination on a dataset and right now collect and print some things to get a sense of sklearn's attributes for a given class,
 often varying the number of components to be selected (from 1 up to the original number of features).
 
+nn.py implements a simple neural net with one hidden layer after transforming the data via various clustering and feature transformation methods.
+
 Eventually various combinations of clustering and dimensional reduction/feature transformation will be used to transform the datasets before applying a NN.
 
 data.py has methods that gather and preprocess the data for the tennis (win/loss) and titanic (survival) datasets. For the tennis data in particular, many columns are dropped for various reasons.
