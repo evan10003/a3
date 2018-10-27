@@ -36,10 +36,10 @@ def load_titanic_data(form="np", normalized=True):
     imp = Imputer(missing_values='NaN', strategy='mean', axis=0)
     X_test = imp.fit_transform(X_test)
     y_test = labels[cutoff_val:]
-    X_train1 = X_train[:cutoff_train,:]
-    y_train1 = y_train[:cutoff_train]
-    X_val = X_train[cutoff_train:,:]
-    y_val = y_train[cutoff_train:]
+    # X_train1 = X_train[:cutoff_train,:]
+    # y_train1 = y_train[:cutoff_train]
+    # X_val = X_train[cutoff_train:,:]
+    # y_val = y_train[cutoff_train:]
 
     scaler = StandardScaler().fit(X_train)
     Xscaled_train = scaler.transform(X_train)
@@ -118,7 +118,7 @@ def load_tennis_data(form="np", normalized=True):
     #     df[d] = df[d].fillna('other')
     # = pd.get_dummies(df, columns=dummy_columns, drop_first=True)
     cutoff_train = 3*df.shape[0]//5
-    cutoff_val = 4*df.shape[0]//5
+    cutoff_val = df.shape[0]-1000
     df = df.sample(frac=1, random_state=7)
     tennis_df = df.drop(['win'] + dummy_columns + ['best_of'], axis=1)
     target_df = df['win']
@@ -143,10 +143,10 @@ def load_tennis_data(form="np", normalized=True):
     imp = Imputer(missing_values='NaN', strategy='mean', axis=0)
     X_test = imp.fit_transform(X_test)
     y_test = labels[cutoff_val:]
-    X_train1 = X_train[:cutoff_train,:]
-    y_train1 = y_train[:cutoff_train]
-    X_val = X_train[cutoff_train:,:]
-    y_val = y_train[cutoff_train:]
+    # X_train1 = X_train[:cutoff_train,:]
+    # y_train1 = y_train[:cutoff_train]
+    # X_val = X_train[cutoff_train:,:]
+    # y_val = y_train[cutoff_train:]
 
     scaler = StandardScaler().fit(X_train)
     Xscaled_train = scaler.transform(X_train)
